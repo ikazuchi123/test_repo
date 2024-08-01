@@ -1,0 +1,7 @@
+server:
+  port: 8089
+  tomcat:
+    accept-count: 1000
+    max-connections: 2000
+    threads:
+      max: 500
