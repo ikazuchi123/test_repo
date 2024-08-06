@@ -1,4 +1,4 @@
-package com.merkle.GenAI.websocket;
+package com.merkle.SpringAI.websocket;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

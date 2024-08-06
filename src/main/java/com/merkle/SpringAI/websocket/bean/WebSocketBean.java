@@ -1,4 +1,4 @@
-package com.merkle.GenAI.websocket.bean;
+package com.merkle.SpringAI.websocket.bean;
 
 import lombok.Data;
 import org.springframework.web.socket.WebSocketSession;

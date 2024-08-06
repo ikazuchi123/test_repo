@@ -1,4 +1,4 @@
-package com.merkle.GenAI.utils.constants.enums;
+package com.merkle.SpringAI.utils.constants.enums;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package com.merkle.GenAI.utils.constants.enums;
+package com.merkle.SpringAI.utils.constants.enums;
 
 /**
  * @Desc: 区分不同的消息模板

@@ -1,4 +1,4 @@
-package com.merkle.GenAI.utils;
+package com.merkle.SpringAI.utils;
 
 import java.io.Serializable;
 
