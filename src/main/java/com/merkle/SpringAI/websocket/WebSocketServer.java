@@ -1,12 +1,16 @@
-package com.merkle.GenAI.websocket;
+package com.merkle.SpringAI.websocket;
 
+
+import com.merkle.SpringAI.service.OllamaService;
+import jakarta.websocket.*;
+import jakarta.websocket.server.PathParam;
+import jakarta.websocket.server.ServerEndpoint;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import javax.websocket.*;
-import javax.websocket.server.PathParam;
-import javax.websocket.server.ServerEndpoint;
+
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -15,6 +19,16 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @Service
 @ServerEndpoint("/api/websocket/{sid}")
 public class WebSocketServer {
+
+    @Autowired
+    private static OllamaService ollamaService;
+
+    @Autowired
+    private void setChatClient(OllamaService ollamaService){
+        WebSocketServer.ollamaService = ollamaService;
+    }
+
+
     //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
     private static int onlineCount = 0;
     //concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。
@@ -64,6 +78,10 @@ public class WebSocketServer {
     @OnMessage
     public void onMessage(String message, Session session) {
         log.info("收到来自窗口" + sid + "的信息:" + message);
+        String result = ollamaService.call(message);
+
+//        String result = documentService.chat_with_record(message,room_id);
+//        String result = message;
         //群发消息
 //        for (WebSocketServer item : webSocketSet) {
 //            try {
@@ -73,7 +91,7 @@ public class WebSocketServer {
 //            }
 //        }
         try {
-            session.getBasicRemote().sendText("野火哈基咪" + message);
+            session.getBasicRemote().sendText(result);
         }catch (Exception e){
             log.error("消息推送失败");
         }

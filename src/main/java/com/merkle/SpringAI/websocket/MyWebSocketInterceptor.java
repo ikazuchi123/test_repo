@@ -1,4 +1,4 @@
-package com.merkle.GenAI.websocket;
+package com.merkle.SpringAI.websocket;
 
 
 import cn.hutool.core.util.StrUtil;

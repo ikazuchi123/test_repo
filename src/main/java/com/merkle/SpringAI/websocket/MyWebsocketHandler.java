@@ -1,8 +1,8 @@
-package com.merkle.GenAI.websocket;
+package com.merkle.SpringAI.websocket;
 
 
 import cn.hutool.core.lang.UUID;
-import com.merkle.GenAI.websocket.bean.WebSocketBean;
+import com.merkle.SpringAI.websocket.bean.WebSocketBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.merkle.GenAI.utils.exception;
+package com.merkle.SpringAI.utils.exception;
 
 /**
  * @author vdeng

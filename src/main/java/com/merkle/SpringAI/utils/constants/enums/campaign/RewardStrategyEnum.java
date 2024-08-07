@@ -1,4 +1,4 @@
-package com.merkle.GenAI.utils.constants.enums.campaign;
+package com.merkle.SpringAI.utils.constants.enums.campaign;
 
 import lombok.Getter;
 

@@ -1,4 +1,4 @@
-package com.merkle.GenAI.utils.constants.enums;
+package com.merkle.SpringAI.utils.constants.enums;
 
 public enum PermissionAccessModleEnum {
     /*ACCESS_ONLY(1, "access_only"),

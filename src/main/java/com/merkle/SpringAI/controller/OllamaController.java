@@ -1,25 +1,27 @@
-package com.merkle.GenAI.controller;
+package com.merkle.SpringAI.controller;
 
-import com.merkle.GenAI.utils.Result;
-import com.merkle.GenAI.utils.constants.ExceptionConstants;
-import com.merkle.GenAI.utils.constants.ResultMsg;
+import com.merkle.SpringAI.service.OllamaService;
+import com.merkle.SpringAI.utils.Result;
+import com.merkle.SpringAI.utils.constants.ExceptionConstants;
+import com.merkle.SpringAI.utils.constants.ResultMsg;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/ollama")
 public class OllamaController {
 
-//    @Autowired
-//    private OllamaChatClient ollamaChatClient;
+    @Autowired
+    private OllamaService ollamaService;
 
-    @PostMapping("/hello")
-    public Result helloWorld(){
-        return success("Helloworld!");
+    //基础 单句聊天
+    @GetMapping("/chat")
+    public Map<String, String> chat(@RequestParam(value = "message") String message) {
+        String result = ollamaService.call(message);
+        return Map.of("generation", result);
     }
-
 
 
 

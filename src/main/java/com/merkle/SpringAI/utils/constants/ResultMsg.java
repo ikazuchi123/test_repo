@@ -1,4 +1,4 @@
-package com.merkle.GenAI.utils.constants;
+package com.merkle.SpringAI.utils.constants;
 
 public class ResultMsg {
 

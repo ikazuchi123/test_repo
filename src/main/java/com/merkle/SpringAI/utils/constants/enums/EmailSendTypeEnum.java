@@ -1,4 +1,4 @@
-package com.merkle.GenAI.utils.constants.enums;
+package com.merkle.SpringAI.utils.constants.enums;
 
 public enum EmailSendTypeEnum {
     // 订单变动发送邮件

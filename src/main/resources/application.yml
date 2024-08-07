@@ -5,3 +5,15 @@ server:
     max-connections: 2000
     threads:
       max: 500
+spring:
+  ai:
+    ollama:
+      base-url: http://127.0.0.1:11434/
+      chat:
+        options:
+          #          model: llama3.1
+          model: qwen2
+          temperature: 0.7
+      embedding:
+        model: mofanke/dmeta-embedding-zh
+  #        model: llama3.1
