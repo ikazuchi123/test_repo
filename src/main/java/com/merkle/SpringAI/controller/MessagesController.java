@@ -1,36 +1,32 @@
 package com.merkle.SpringAI.controller;
 
+import com.merkle.SpringAI.dao.entity.MessagesEntity;
+import com.merkle.SpringAI.service.MessageService;
 import com.merkle.SpringAI.service.OllamaService;
 import com.merkle.SpringAI.utils.Result;
 import com.merkle.SpringAI.utils.constants.ExceptionConstants;
 import com.merkle.SpringAI.utils.constants.ResultMsg;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/ollama")
-public class OllamaController {
-
+@RequestMapping("/messages")
+public class MessagesController {
     @Autowired
-    private OllamaService ollamaService;
+    private MessageService messageService;
 
     //基础 单句聊天
-    @GetMapping("/chat")
-    public Map<String, String> chat(@RequestParam(value = "message") String message) {
-        String result = ollamaService.call(message);
-        return Map.of("generation", result);
+    @GetMapping("/getHistory")
+    public Result chat(@RequestParam(value = "room_id") Long roomId) {
+        List<MessagesEntity> result = messageService.searchMessagesByRoomId(roomId);
+        return success(result);
     }
-
-
-
-
-
-
-
-
-
 
 
 

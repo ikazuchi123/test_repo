@@ -17,3 +17,12 @@ spring:
       embedding:
         model: mofanke/dmeta-embedding-zh
   #        model: llama3.1
+  datasource:
+    mysql:
+      driverClassName: com.mysql.cj.jdbc.Driver
+      password: 'ikazuchi'
+      jdbcUrl: jdbc:mysql://localhost:3306/chatbot_dev?allowMultiQueries=true
+      url: jdbc:mysql://localhost:3306/chatbot_dev?allowMultiQueries=true
+      username: root
+mybatis-plus:
+  mapper-locations: classpath:mapper/*Mapper.xml

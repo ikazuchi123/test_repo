@@ -1,6 +1,7 @@
 package com.merkle.SpringAI.websocket;
 
 
+import com.merkle.SpringAI.service.MessageService;
 import com.merkle.SpringAI.service.OllamaService;
 import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
@@ -20,12 +21,18 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @ServerEndpoint("/api/websocket/{sid}")
 public class WebSocketServer {
 
-    @Autowired
+//    @Autowired
     private static OllamaService ollamaService;
 
     @Autowired
     private void setChatClient(OllamaService ollamaService){
         WebSocketServer.ollamaService = ollamaService;
+    }
+
+    private static MessageService messageService;
+    @Autowired
+    private void setMessageService(MessageService messageService){
+        WebSocketServer.messageService = messageService;
     }
 
 
@@ -78,18 +85,14 @@ public class WebSocketServer {
     @OnMessage
     public void onMessage(String message, Session session) {
         log.info("收到来自窗口" + sid + "的信息:" + message);
+
+        System.out.println("记录收到信息");
+        messageService.recordMessage(message,Long.valueOf(sid),Long.valueOf(sid),0);
+
         String result = ollamaService.call(message);
 
-//        String result = documentService.chat_with_record(message,room_id);
-//        String result = message;
-        //群发消息
-//        for (WebSocketServer item : webSocketSet) {
-//            try {
-//                item.sendMessage(message);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        System.out.println("记录生成回复");
+        messageService.recordMessage(result,Long.valueOf(sid),0L,Integer.valueOf(sid));
         try {
             session.getBasicRemote().sendText(result);
         }catch (Exception e){
