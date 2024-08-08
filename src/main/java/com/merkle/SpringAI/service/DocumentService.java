@@ -3,6 +3,7 @@ package com.merkle.SpringAI.service;
 
 
 import cn.hutool.core.util.ArrayUtil;
+import org.springframework.ai.chat.client.advisor.PromptChatMemoryAdvisor;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.ollama.OllamaChatModel;
@@ -226,7 +227,7 @@ public class DocumentService {
 				%s
 				""";
 
-
+//		new PromptChatMemoryAdvisor()
 		return String.format(promptText, message, context);
 	}
 }

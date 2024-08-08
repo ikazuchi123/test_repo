@@ -9,6 +9,9 @@ spring:
   main:
     allow-bean-definition-overriding: true
   ai:
+    chat:
+      client:
+        enabled: false
     ollama:
       base-url: http://127.0.0.1:11434/
       chat:

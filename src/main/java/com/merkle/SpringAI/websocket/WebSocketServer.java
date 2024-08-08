@@ -7,6 +7,15 @@ import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.PromptChatMemoryAdvisor;
+import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
+import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.memory.InMemoryChatMemory;
+import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.ollama.OllamaChatModel;
+import org.springframework.ai.vectorstore.SearchRequest;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -28,6 +37,21 @@ public class WebSocketServer {
 //    private void setChatClient(OllamaChatClient chatClient){
 //        WebSocketServer.chatClient = chatClient;
 //    }
+
+
+    private  ChatClient chatClient;
+
+    private static VectorStore vectorStore;
+    @Autowired
+    private void setVectorStore(VectorStore vectorStore){
+        WebSocketServer.vectorStore = vectorStore;
+    }
+
+    private static OllamaChatModel ollamaChatModel;
+    @Autowired
+    private void setOllamaChatModel(OllamaChatModel ollamaChatModel){
+        WebSocketServer.ollamaChatModel = ollamaChatModel;
+    }
 
     private static DocumentService documentService;
     @Autowired
@@ -58,6 +82,12 @@ public class WebSocketServer {
      */
     @OnOpen
     public void onOpen(Session session, @PathParam("sid") String sid) {
+        //新加入内容——————————————————————————————————————————————————————————————
+        ChatMemory chatMemory = new InMemoryChatMemory();
+        ChatClient.Builder builder = ChatClient.builder(ollamaChatModel);
+        this.chatClient = builder.defaultSystem("你是一个友善的销售助手。请你根据提供的知识，回答客户的问题，向客户推荐他可能会感兴趣的产品。你只能根据提供的产品知识数据回答，当遇到你不知道的情况或知识不足的情况时，回答你不知道。当你认为提供的知识与用户的问题不相关时，忽视那些知识。记住，当客户没有主动想你索取购买链接时，不要主动提供购买链接。请你以像人类一样的风格回答客户的问题，不要每次回答过多的话。")
+                .defaultAdvisors(new PromptChatMemoryAdvisor(chatMemory)).build();
+        //新加入内容end———————————————————————————————————————————————————————————
         this.session = session;
         webSocketSet.add(this);     //加入set中
         this.sid = sid;
@@ -91,13 +121,18 @@ public class WebSocketServer {
     @OnMessage
     public void onMessage(String message, Session session) {
         log.info("收到来自窗口" + sid + "的信息:" + message);
-//        String result = chatClient.call(message);
         Long room_id = Long.parseLong(sid);
         System.out.println("记录提问信息: " + message);
-        messageService.recordMessage(message,room_id,room_id,0);
+//        messageService.recordMessage(message,room_id,room_id,0);
 
-        String result = documentService.chat_with_record(message,room_id);
-//        String result = message;
+        System.out.println(chatClient.toString());
+//        String result = documentService.chat_with_record(message,room_id);
+        ChatResponse response = chatClient
+                .prompt()
+                .advisors(new QuestionAnswerAdvisor(vectorStore, SearchRequest.defaults().withSimilarityThreshold(0.5)))
+                .user(message)
+                .call()
+                .chatResponse();
         //群发消息
 //        for (WebSocketServer item : webSocketSet) {
 //            try {
@@ -107,7 +142,7 @@ public class WebSocketServer {
 //            }
 //        }
         try {
-            session.getBasicRemote().sendText(result);
+            session.getBasicRemote().sendText(response.getResult().getOutput().getContent());
         }catch (Exception e){
             log.error("消息推送失败");
         }
